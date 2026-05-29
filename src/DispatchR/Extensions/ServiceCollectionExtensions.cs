@@ -53,20 +53,32 @@ public static class ServiceCollectionExtensions
         var otherHandlerTypes = new HashSet<Type>()
         {
             pipelineBehaviorType,
-            streamRequestHandlerType,
             streamPipelineBehaviorType,
             syncNotificationHandlerType
         };
 
         var allTypes = configurationOptions.Assemblies.SelectMany(x => x.GetTypes()).Distinct()
-            .Where(p =>
-                p.GetInterfaces() is { Length: >= 1 } interfaces &&
-                       interfaces
-                           .Where(i => i.IsGenericType)
-                           .Select(i => i.GetGenericTypeDefinition())
-                    .Any(i => i == requestHandlerType
-                        ? configurationOptions.IsHandlerIncluded(p)
-                        : otherHandlerTypes.Contains(i)))
+            .Where(type =>
+            {
+                var genericInterfaces = type.GetInterfaces()
+                    .Where(i => i.IsGenericType)
+                    .Select(i => i.GetGenericTypeDefinition())
+                    .ToList();
+
+                var isRequestHandler = genericInterfaces.Contains(requestHandlerType);
+                var isPipelineBehavior = genericInterfaces.Contains(pipelineBehaviorType);
+                var isStreamRequestHandler = genericInterfaces.Contains(streamRequestHandlerType);
+                var isStreamPipelineBehavior = genericInterfaces.Contains(streamPipelineBehaviorType);
+
+                var isConcreteRequestHandler = isRequestHandler && !isPipelineBehavior;
+                var isConcreteStreamRequestHandler = isStreamRequestHandler && !isStreamPipelineBehavior;
+                if (isConcreteRequestHandler || isConcreteStreamRequestHandler)
+                {
+                    return configurationOptions.IsHandlerIncluded(type);
+                }
+
+                return genericInterfaces.Intersect(otherHandlerTypes).Any();
+            })
             .ToList();
 
         if (configurationOptions.RegisterNotifications)

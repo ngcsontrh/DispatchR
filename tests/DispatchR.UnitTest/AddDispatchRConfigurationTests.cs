@@ -77,6 +77,48 @@ public class AddDispatchRConfigurationTests
     }
     
     [Fact]
+    public void AddDispatchR_DoesNotRegisterStreamHandler_WhenOnlyRequestHandlerIsIncluded()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        
+        // Act
+        services.AddDispatchR(cfg =>
+        {
+            cfg.Assemblies.Add(typeof(Fixture).Assembly);
+            cfg.RegisterPipelines = true;
+            cfg.RegisterNotifications = false;
+            cfg.IncludeHandlers = [Fixture.AnyHandlerRequestWithoutPipeline.GetType()];
+        });
+        
+        // Assert
+        Assert.DoesNotContain(services, p =>
+            p.IsKeyedService &&
+            p.KeyedImplementationType == Fixture.AnyStreamHandler.GetType());
+    }
+    
+    [Fact]
+    public void AddDispatchR_ReturnsExpectedResponse_IncludeSingleStreamHandler()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        
+        // Act
+        services.AddDispatchR(cfg =>
+        {
+            cfg.Assemblies.Add(typeof(Fixture).Assembly);
+            cfg.RegisterPipelines = true;
+            cfg.RegisterNotifications = false;
+            cfg.IncludeHandlers = [Fixture.AnyStreamHandler.GetType()];
+        });
+        
+        // Assert
+        Assert.Contains(services, p =>
+            p.IsKeyedService &&
+            p.KeyedImplementationType == Fixture.AnyStreamHandler.GetType());
+    }
+    
+    [Fact]
     public void AddDispatchR_ReturnsExpectedResponse_ExcludeSingleHandler()
     {
         // Arrange
@@ -97,6 +139,27 @@ public class AddDispatchRConfigurationTests
                 p.IsKeyedService && 
                 p.KeyedImplementationType == Fixture.AnyHandlerRequestWithoutPipeline.GetType());
         Assert.Equal(0, countOfAllSimpleHandlers);
+    }
+    
+    [Fact]
+    public void AddDispatchR_ReturnsExpectedResponse_ExcludeSingleStreamHandler()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        
+        // Act
+        services.AddDispatchR(cfg =>
+        {
+            cfg.Assemblies.Add(typeof(Fixture).Assembly);
+            cfg.RegisterPipelines = true;
+            cfg.RegisterNotifications = false;
+            cfg.ExcludeHandlers = [Fixture.AnyStreamHandler.GetType()];
+        });
+        
+        // Assert
+        Assert.DoesNotContain(services, p =>
+            p.IsKeyedService &&
+            p.KeyedImplementationType == Fixture.AnyStreamHandler.GetType());
     }
     
     [Fact]
