@@ -1,0 +1,35 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/build-release.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Benchmark/Benchmark.csproj" />
+    <Project Path="src/DispatchR.Abstractions/DispatchR.Abstractions.csproj" />
+    <Project Path="src/DispatchR/DispatchR.csproj" />
+    <Project Path="src/Sample/Sample.csproj" />
+  </Folder>
+  <Folder Name="/src/AspireModularSample/">
+    <File Path="src/AspireModularExample/README.md" />
+    <Project Path="src/AspireModularExample/AspireModularSample.AppHost/AspireModularSample.AppHost.csproj" />
+    <Project Path="src/AspireModularExample/AspireModularSample.Modules/AspireModularSample.Modules.csproj" />
+    <Project Path="src/AspireModularExample/AspireModularSample.ServiceA/AspireModularSample.ServiceA.csproj" />
+    <Project Path="src/AspireModularExample/AspireModularSample.ServiceB/AspireModularSample.ServiceB.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DispatchR.IntegrationTest/DispatchR.IntegrationTest.csproj" />
+    <Project Path="tests/DispatchR.TestCommon/DispatchR.TestCommon.csproj" />
+    <Project Path="tests/DispatchR.UnitTest/DispatchR.UnitTest.csproj" />
+  </Folder>
+</Solution>
